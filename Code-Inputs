@@ -1,0 +1,90 @@
+#Performe - To explore Business Analytics
+
+#Importing required libraries
+
+import numpy as np
+import pandas as pd
+
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+import seaborn as sns
+data = pd.read_csv('SampleSuperstore.csv')
+data.head()
+data.isnull().sum()
+data.columns.tolist()
+
+#lets find the Descriptive statistics value of datset
+data.describe()
+data.corr()
+sns.pairplot(data);
+plt.show()
+plt.figure(figsize = (30, 12))
+sns.countplot(x = 'Sub-Category', hue = 'Region', data = data, palette = 'twilight')
+plt.xticks(rotation = 45, fontsize = 20)
+plt.yticks(fontsize = 20)
+plt.xlabel('Sub-Categories', fontsize = 25)
+plt.ylabel('', fontsize = 20)
+plt.legend(loc = 5, fontsize = 20);
+Categories classified according to the region.
+plt.figure(figsize = (30, 12))
+sns.countplot(x = 'Category', hue = 'Region', data = data, palette = 'twilight')
+plt.xticks(rotation = 45, fontsize = 20)
+plt.yticks(fontsize = 20)
+plt.xlabel('Categories', fontsize = 25)
+plt.ylabel('', fontsize = 20)
+plt.legend(loc = 5, fontsize = 20);
+plt.figure(figsize = (30, 12))
+sns.countplot(x = 'Ship Mode', hue = 'Segment', data = data, palette = 'twilight_shifted')
+plt.xticks(fontsize = 20)
+plt.yticks(fontsize = 20)
+plt.xlabel('Shipping modes', fontsize = 25)
+plt.ylabel('', fontsize = 20)
+plt.legend(loc = 5, fontsize = 20);
+
+Quantities ordered vs state
+plt.figure(figsize = (20, 9))
+sns.countplot(x = data['State'],palette = 'twilight_shifted', order = (data['State'].value_counts().head(50)).index)
+plt.xticks(rotation = 50, ha = 'right', fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.xlabel('State', fontsize = 15)
+plt.ylabel('Quantities ordered', fontsize = 15);
+
+#To be more precise, we can get top 10 states for the above graph as shown below.
+top_10 = data.groupby('State')['Quantity'].sum().reset_index().sort_values(by = 'Quantity', ascending = False)
+sns.catplot(x = 'State', y = 'Quantity', data = top_10.head(15), kind = 'bar', palette = 'twilight', aspect = 3)
+plt.title('Top 10 States', fontsize = 15)
+plt.xticks(rotation = 50, ha = 'right', fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.xlabel('States', fontsize = 15)
+plt.ylabel('Quantities ordered', fontsize = 15);
+
+Quantities ordered vs city
+plt.figure(figsize = (20, 9))
+sns.countplot(x = data['City'],palette = 'hsv', order = (data['City'].value_counts().head(50)).index)
+plt.xticks(rotation = 50, ha = 'right', fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.xlabel('City', fontsize = 15)
+plt.ylabel('Quantities ordered ', fontsize = 15);
+
+#To be more precise, we can get top 10 city for the above graph as shown below.
+top_10 = data.groupby('State')['Quantity'].sum().reset_index().sort_values(by = 'Quantity', ascending = False)
+sns.catplot(x = 'State', y = 'Quantity', data = top_10.head(15), kind = 'bar', palette = 'hsv', aspect = 3)
+plt.title('Top 10 States', fontsize = 15)
+plt.xticks(rotation = 50, ha = 'right', fontsize = 15)
+plt.yticks(fontsize = 15)
+plt.xlabel('States', fontsize = 15)
+plt.ylabel('Quantities ordered', fontsize = 15);
+
+average profit divided by region
+Quantity_vs_region = data.groupby('Region')['Quantity'].sum().reset_index()
+plt.figure(figsize = (12, 8))
+plt.pie(Quantity_vs_region['Quantity'], labels = Quantity_vs_region['Region'].unique(), autopct='%1.1f%%', startangle = 90,
+       colors = ['#66b3ff', '#ff6666', '#99ff99', '#ffcc99'])
+
+plt.title('Quantities ordered by each region', fontsize = 15);
+Profit_vs_region = data.groupby('Region')['Profit'].mean().reset_index()
+plt.figure(figsize = (12, 8))
+plt.pie(Profit_vs_region ['Profit'], labels = Profit_vs_region ['Region'].unique(), autopct = '%.1f%%', startangle = 90,
+       colors = ['#ff6666', '#ffcc99', '#99ff99', '#66b3ff'])
+plt.title('Average profit divided between different regions', fontsize = 15);
